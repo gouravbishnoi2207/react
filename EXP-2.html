@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Banking Interface</title>
+    <style>
+         :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --accent: #2b7cff;
+            --success: #16a34a;
+            --danger: #e04b4b;
+            --muted: #6b7280;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --radius: 10px;
+            --input-radius: 8px;
+            --max-width: 720px;
+            --gap: 0.75rem;
+            --transition: 160ms;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html,
+        body {
+            height: 100%;
+        }
+        
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(180deg, var(--bg), #eef3fb);
+            color: #0f172a;
+            line-height: 1.4;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .lead {
+            color: var(--muted);
+            margin: 0.25rem 0 1rem;
+            font-size: 0.95rem;
+        }
+        
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+        
+        .balance-wrapper {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 24px var(--shadow);
+            text-align: center;
+        }
+        
+        .balance-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 700;
+            gap: 1rem;
+        }
+        
+        .balance-label {
+            color: var(--muted);
+            font-size: 1.2rem;
+        }
+        
+        .balance-amount {
+            color: var(--success);
+            font-size: 3rem;
+        }
+        
+        .transaction-wrapper {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 24px var(--shadow);
+        }
+        
+        .history-wrapper {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 24px var(--shadow);
+        }
+        
+        .transaction-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .transaction-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e6e9ef;
+            font-size: 1.1rem;
+        }
+        
+        .transaction-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .transaction-type {
+            font-weight: 600;
+        }
+        
+        .transaction-amount {
+            font-weight: 600;
+        }
+        
+        .deposit {
+            color: var(--success);
+        }
+        
+        .withdrawal {
+            color: var(--danger);
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        form {
+            width: 100%;
+        }
+        
+        fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0 0 1.5rem;
+            display: grid;
+            gap: var(--gap);
+            align-items: start;
+            grid-auto-rows: auto;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .hint {
+            display: block;
+            color: var(--muted);
+            font-size: .875rem;
+            margin-bottom: .25rem;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: .75rem;
+            border: 2px solid #d1d5db;
+            border-radius: var(--input-radius);
+            background: #fff;
+            font-size: 1.1rem;
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(43, 124, 255, 0.12);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        button {
+            padding: .75rem 1.5rem;
+            border-radius: 8px;
+            border: 0;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform var(--transition), background var(--transition);
+            background: var(--accent);
+            color: #fff;
+        }
+        
+        button.secondary {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+        
+        footer {
+            text-align: center;
+            color: var(--muted);
+            margin-top: 2rem;
+            font-size: .85rem;
+        }
+        
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas: "balance transaction" "history history";
+            }
+            .balance-wrapper {
+                grid-area: balance;
+            }
+            .transaction-wrapper {
+                grid-area: transaction;
+            }
+            .history-wrapper {
+                grid-area: history;
+            }
+            .balance-display {
+                font-size: 2.5rem;
+            }
+            .balance-amount {
+                font-size: 4rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-areas: "balance transaction history";
+            }
+            .history-wrapper {
+                grid-area: history;
+            }
+        }
+        
+        .visually-hidden {
+            position: absolute !important;
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Banking Interface</h1>
+        <p class="lead">Manage your account balance with deposit and withdrawal functionality.</p>
+    </header>
+
+    <main>
+        <section aria-labelledby="balance-title" class="balance-wrapper">
+            <h2 id="balance-title" class="visually-hidden">Account Balance</h2>
+            <div class="balance-display">
+                <span class="balance-label">Current Balance:</span>
+                <span class="balance-amount" id="balance">$1000.00</span>
+            </div>
+        </section>
+
+        <section aria-labelledby="transaction-title" class="transaction-wrapper">
+            <h2 id="transaction-title" class="visually-hidden">Transactions</h2>
+
+            <form id="transaction-form" novalidate>
+                <fieldset>
+                    <legend>Transaction Details</legend>
+
+                    <label for="amount">Amount</label>
+                    <input id="amount" name="amount" type="number" required min="0.01" step="0.01" placeholder="e.g. 100.00" aria-describedby="amount-help" />
+                    <small id="amount-help" class="hint">Enter a positive amount to deposit or withdraw.</small>
+                    <div class="error-message" id="error-message"></div>
+
+                </fieldset>
+
+                <div class="actions">
+                    <button type="button" id="deposit-btn">Deposit</button>
+                    <button type="button" id="withdraw-btn" class="secondary">Withdraw</button>
+                </div>
+            </form>
+        </section>
+
+        <section aria-labelledby="history-title" class="history-wrapper">
+            <h2 id="history-title">Transaction History</h2>
+            <ul id="transaction-history" class="transaction-list">
+                <!-- Transactions will be added here -->
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <small>Responsive Banking Interface • Client-side validation</small>
+    </footer>
+
+    <script>
+        // Banking Interface JavaScript
+
+        let balance = 1000.00;
+
+        const balanceElement = document.getElementById('balance');
+        const amountInput = document.getElementById('amount');
+        const depositBtn = document.getElementById('deposit-btn');
+        const withdrawBtn = document.getElementById('withdraw-btn');
+        const transactionHistory = document.getElementById('transaction-history');
+        const errorMessage = document.getElementById('error-message');
+
+        // Function to update balance display
+        function updateBalance() {
+            balanceElement.textContent = `$${balance.toFixed(2)}`;
+        }
+
+        // Function to add transaction to history
+        function addTransaction(type, amount) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="transaction-type ${type.toLowerCase()}">${type}</span>
+                <span class="transaction-amount ${type.toLowerCase()}">$${amount.toFixed(2)}</span>
+            `;
+            transactionHistory.appendChild(li);
+        }
+
+        // Function to show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Function to validate amount
+        function validateAmount(amount) {
+            if (isNaN(amount) || amount <= 0) {
+                showError('Please enter a valid positive amount.');
+                return false;
+            }
+            return true;
+        }
+
+        // Deposit event handler
+        depositBtn.addEventListener('click', () => {
+            const amount = parseFloat(amountInput.value);
+            if (validateAmount(amount)) {
+                balance += amount;
+                updateBalance();
+                addTransaction('Deposit', amount);
+                amountInput.value = '';
+            }
+        });
+
+        // Withdraw event handler
+        withdrawBtn.addEventListener('click', () => {
+            const amount = parseFloat(amountInput.value);
+            if (validateAmount(amount)) {
+                if (amount > balance) {
+                    showError('Insufficient funds for withdrawal.');
+                } else {
+                    balance -= amount;
+                    updateBalance();
+                    addTransaction('Withdrawal', amount);
+                    amountInput.value = '';
+                }
+            }
+        });
+
+        // Initialize balance display
+        updateBalance();
+    </script>
+</body>
+
+</html>

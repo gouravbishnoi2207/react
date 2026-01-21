@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Student Registration</title>
+    <style>
+         :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --accent: #2b7cff;
+            --success: #16a34a;
+            --danger: #e04b4b;
+            --muted: #6b7280;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --radius: 10px;
+            --input-radius: 8px;
+            --max-width: 720px;
+            --gap: 0.75rem;
+            --transition: 160ms;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html,
+        body {
+            height: 100%;
+        }
+        
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(180deg, var(--bg), #eef3fb);
+            color: #0f172a;
+            line-height: 1.4;
+        }
+        
+        .form-wrapper {
+            width: 100%;
+            max-width: var(--max-width);
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 24px var(--shadow);
+        }
+        
+        header {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+        
+        .lead {
+            color: var(--muted);
+            margin: 0.25rem 0 1rem;
+            font-size: 0.95rem;
+        }
+        
+        form {
+            width: 100%;
+        }
+        
+        fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0 0 1rem;
+            display: grid;
+            gap: var(--gap);
+            align-items: start;
+            grid-auto-rows: auto;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .hint {
+            display: block;
+            color: var(--muted);
+            font-size: .875rem;
+            margin-bottom: .25rem;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="number"] {
+            width: 100%;
+            padding: .6rem .75rem;
+            border: 1px solid #d1d5db;
+            border-radius: var(--input-radius);
+            background: #fff;
+            font-size: 1rem;
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(43, 124, 255, 0.12);
+        }
+        
+        input:required:invalid {
+            border-color: var(--danger);
+        }
+        
+        input:valid {
+            border-color: var(--success);
+        }
+        
+        .actions {
+            display: flex;
+            gap: .5rem;
+            margin-top: .75rem;
+            justify-content: flex-end;
+        }
+        
+        button {
+            padding: .6rem .9rem;
+            border-radius: 8px;
+            border: 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform var(--transition);
+            background: var(--accent);
+            color: #fff;
+        }
+        
+        button.secondary {
+            background: transparent;
+            border: 1px solid #e6e9ef;
+            color: var(--muted);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+        
+        footer {
+            text-align: center;
+            color: var(--muted);
+            margin-top: .75rem;
+            font-size: .85rem;
+        }
+        
+        @media (min-width:640px) {
+            fieldset {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: var(--gap);
+                align-items: start;
+            }
+            label[for="name"],
+            input#name,
+            small#name-help {
+                grid-column: 1 / -1;
+            }
+            label[for="email"],
+            input#email,
+            small#email-help {
+                grid-column: 1 / 2;
+            }
+            label[for="age"],
+            input#age,
+            small#age-help {
+                grid-column: 1 / 3;
+            }
+            .actions {
+                grid-column: 1 / -1;
+            }
+        }
+        
+        .visually-hidden {
+            position: absolute !important;
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap;
+        }
+        
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+            .form-wrapper {
+                box-shadow: none;
+            }
+        }
+        
+        .validation-message {
+            display: none;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .validation-message.error {
+            color: var(--danger);
+        }
+        
+        .validation-message.success {
+            color: var(--success);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Student Registration</h1>
+        <p class="lead">Fill in the form below. All fields use HTML5 validation.</p>
+    </header>
+
+    <main>
+        <section aria-labelledby="form-title" class="form-wrapper">
+            <h2 id="form-title" class="visually-hidden">Registration Form</h2>
+
+            <form id="student-form" novalidate>
+                <fieldset>
+                    <legend>Student Details</legend>
+
+                    <label for="name">Full name</label>
+                    <input id="name" name="name" type="text" required minlength="2" maxlength="50" pattern="^[A-Za-z\s]{2,50}$" title="Enter letters and spaces only (2-50 characters)." placeholder="e.g. Jane Doe" aria-describedby="name-help" />
+                    <small id="name-help" class="hint">Letters and spaces only, 2–50 characters.</small>
+                    <div id="name-validation" class="validation-message"></div>
+
+                    <label for="email">Email address</label>
+                    <input id="email" name="email" type="email" required placeholder="you@example.com" aria-describedby="email-help" />
+                    <small id="email-help" class="hint">We'll only use this to contact you.</small>
+                    <div id="email-validation" class="validation-message"></div>
+
+                    <label for="age">Age</label>
+                    <input id="age" name="age" type="number" required min="5" max="120" inputmode="numeric" placeholder="e.g. 21" aria-describedby="age-help" />
+                    <small id="age-help" class="hint">Enter an age between 5 and 120.</small>
+                    <div id="age-validation" class="validation-message"></div>
+
+                </fieldset>
+
+                <div class="actions">
+                    <button type="submit">Register</button>
+                    <button type="reset" class="secondary">Reset</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <small>Responsive HTML5 form • Client-side validation</small>
+    </footer>
+
+    <script>
+        const form = document.getElementById('student-form');
+        const inputs = form.querySelectorAll('input');
+
+        function validateInput(input) {
+            const validationDiv = document.getElementById(input.id + '-validation');
+            if (input.checkValidity()) {
+                validationDiv.textContent = 'Valid';
+                validationDiv.className = 'validation-message success';
+                validationDiv.style.display = 'block';
+            } else {
+                validationDiv.textContent = input.validationMessage;
+                validationDiv.className = 'validation-message error';
+                validationDiv.style.display = 'block';
+            }
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => validateInput(input));
+            input.addEventListener('input', () => {
+                if (input.checkValidity()) {
+                    document.getElementById(input.id + '-validation').style.display = 'none';
+                }
+            });
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let isValid = true;
+            inputs.forEach(input => {
+                validateInput(input);
+                if (!input.checkValidity()) isValid = false;
+            });
+            if (isValid) {
+                alert('Registration successful!');
+            }
+        });
+
+        form.addEventListener('reset', () => {
+            inputs.forEach(input => {
+                document.getElementById(input.id + '-validation').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>
